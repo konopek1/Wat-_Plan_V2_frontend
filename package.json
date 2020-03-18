@@ -1,0 +1,7 @@
+{
+  "devDependencies": {
+    "cssnano": "^4.1.10",
+    "sass": "^1.26.3",
+    "typescript": "^3.8.3"
+  }
+}
