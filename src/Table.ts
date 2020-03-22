@@ -1,5 +1,4 @@
 import { Krotka, domElement} from './index';
-import Week from './Week';
 import { getCurrentWeeks,BASE_URL } from './helper';
 
 const DAYS = ["Poniedziałek","Wtorek","Środa","Czwartek","Piątek","Sobota","Niedziela"];
@@ -8,15 +7,15 @@ export default class Table implements domElement {
     insert_id: string;
     id: string;
     private data: Krotka[];
-    private cssClass: string;
-    private isMoblie: boolean;
     private offset:number;
     group: string;
+    element:HTMLElement;
 
     constructor(data:Krotka[],insert_id: string,offset:number) {
         this.data = data;
         this.insert_id = insert_id;
         this.offset = offset;
+        this.inject();
     }
 
     render(): string {
@@ -27,7 +26,7 @@ export default class Table implements domElement {
         for (let i = 0; i < this.data.length - 6; i += 7) {
             let day = "";
             for (let j = 0; j < 7; j++) {
-                day += td(this.data[i + j].name);
+                day += td(this.data[i + j].title);
             }
             content += tr(td(DAYS[n_day])+day);
             n_day < 7 ? n_day++ : n_day=0;
@@ -40,6 +39,9 @@ export default class Table implements domElement {
     }
 
     public inject(id?:string): void {
-        document.getElementById(id || this.insert_id).innerHTML = this.render();
+        const div = document.createElement('div');
+        div.innerHTML = this.render();
+        this.element= div;
+        document.getElementById(id || this.insert_id).appendChild(div);
     }
 }
