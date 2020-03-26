@@ -14,8 +14,11 @@ export default class Input implements domElement{
     
     render(): string {
         return (`<div class="form__group field">
-        <input type="input" class="form__field" placeholder="${this.placeholder}" value="" name="${this.placeholder}" id='${this.id}' required />
+        <input type="input" list="${this.id+"datalist"}" class="form__field" placeholder="${this.placeholder}" value="" name="${this.placeholder}" id='${this.id}' required />
         <label for="${this.placeholder}" class="form__label">${this.placeholder}</label>
+        <datalist id="${this.id + "datalist"}">
+        <option>gowno</option>
+        </datalist>
         </div><div id='error-${this.id}'></div>`);
     }
     constructor(id:string,placeholder:string,insert_id?:string,onkeydown?: (e:KeyboardEvent)=> void) {

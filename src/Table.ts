@@ -26,7 +26,8 @@ export default class Table implements domElement {
         for (let i = 0; i < this.data.length - 6; i += 7) {
             let day = "";
             for (let j = 0; j < 7; j++) {
-                day += td(this.data[i + j].title);
+                const krotka = this.data[i + j];
+                day += td(`${krotka.title} <br class='class'>${krotka.class}</br>`);
             }
             content += tr(td(DAYS[n_day])+day);
             n_day < 7 ? n_day++ : n_day=0;

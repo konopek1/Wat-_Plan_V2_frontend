@@ -5,7 +5,10 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "dev" :"parcel src/index.html",
-    "build":"parcel build src/index.html"
+    "dev": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  },
+  "dependencies": {
+    "@tarekraafat/autocomplete.js": "^7.2.0"
   }
 }

@@ -7,4 +7,5 @@ export interface domElement {
 
 export type Krotka = {
     title:string,
+    class:string
 }
