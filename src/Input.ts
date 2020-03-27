@@ -11,14 +11,16 @@ export default class Input implements domElement{
     errorElement?:HTMLElement;
     placeholder:string;
     loader: HTMLElement;
+    data: Krotka[];
+    filterInput: HTMLInputElement;
     
     render(): string {
         return (`<div class="form__group field">
-        <input type="input" list="${this.id+"datalist"}" class="form__field" placeholder="${this.placeholder}" value="" name="${this.placeholder}" id='${this.id}' required />
+        <input type="input" class="form__field" placeholder="${this.placeholder}" value="" name="${this.placeholder}" id='${this.id}' required />
         <label for="${this.placeholder}" class="form__label">${this.placeholder}</label>
-        <datalist id="${this.id + "datalist"}">
-        <option>gowno</option>
-        </datalist>
+        <div id="filters"><div class="form__group field w-100">
+        <input type="input" class="form__field" placeholder="Filtruj plan" value="" name="filter_plan" id='filter_plan' required />
+        <label for="filter_plan" class="form__label">Filtruj plan</label></div>
         </div><div id='error-${this.id}'></div>`);
     }
     constructor(id:string,placeholder:string,insert_id?:string,onkeydown?: (e:KeyboardEvent)=> void) {
@@ -63,7 +65,9 @@ export default class Input implements domElement{
     start(group: string, numberOfWeeks: number = 7): void {
         document.querySelector('#tables_container').innerHTML="";
         document.querySelector('#data_picker').innerHTML="";
+
         const data = this.fetchData(group);
+        this.data = data;
         const offsetNumberOfWeeks = getDataOffset();
     
         for (let i = offsetNumberOfWeeks; i < numberOfWeeks + offsetNumberOfWeeks; i++) {    
@@ -92,6 +96,27 @@ export default class Input implements domElement{
         }
     }
 
+    filterProccess(e:KeyboardEvent,numberOfWeeks: number = 7){
+        document.querySelector('#tables_container').innerHTML="";
+        document.querySelector('#data_picker').innerHTML="";
+
+        const offsetNumberOfWeeks = getDataOffset();
+        console.log(this,this.filterInput.value)
+        const data = this.data.map((k:Krotka)=>{
+            if (k.title.toLocaleLowerCase().includes(this.filterInput.value.toLocaleLowerCase())) return k;
+            if (k.class.toLocaleLowerCase().includes(this.filterInput.value.toLocaleLowerCase())) return k;
+            return {title:"",class:""};
+        });
+
+        for (let i = offsetNumberOfWeeks; i < numberOfWeeks + offsetNumberOfWeeks; i++) {    
+            const weekData = data.slice(i * 49, (i + 1) * 49);
+            const table = new Table(weekData, 'tables_container', i);
+
+            const date = getCurrentWeeks(i);
+            new DatePicker(date,'data_picker',table);
+        }
+    }
+
     getValue():string{
         return this.element.value;
     }
@@ -101,6 +126,8 @@ export default class Input implements domElement{
         outerElement.innerHTML = this.render();
         this.element = outerElement.querySelector(`#${this.id}`);
         this.element.onkeydown = this.onKeyDown.bind(this);
+        this.filterInput = outerElement.querySelector("#filter_plan") as HTMLInputElement;
+        this.filterInput.onkeyup = this.filterProccess.bind(this);
         this.errorElement = outerElement.querySelector(`#error-${this.id}`);
     }
 
